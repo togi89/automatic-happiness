@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gate Request 546f67690d0a Tech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+</head>
+<body>
+
+    <div class="flex flex-col md:flex-row gap-4 p-5 md:items-center">
+        <h1 class="text-xl font-semibold">What's My Gate?</h1>
+        <input type="text" id="flightInput" class="uppercase form-input rounded border p-1 placeholder:normal-case" placeholder="Enter flight number e.g. QF1" >
+        <input type="submit" id="go" value="Tell me" class="form-input items-center rounded-md bg-white p-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+    </div>
+
+    <hr>
+
+    <div class="grid grid-cols-3 gap-4 p-3">
+        <div class="">
+            <h2 id="flightNumIATA" class="text-3xl font-semibold" id="flightHeading">AC545</h2>
+            <h4 id="airlineName" class="text-xl font-light">Air Canada</h4>
+        </div>
+
+        <div class="uppercase border rounded p-1">
+            <h3 class="text-lg font-light tracking-tight">from</h4>
+            <h4 id="depIATA" class="text-xl font-semibold">ABC</h4>
+            <p  id="depName" class="text-sm">placeholder</p>
+        </div>
+
+        <div class="uppercase border rounded p-1">
+            <h3 class="text-lg font-light tracking-tight">to</h3>
+            <h4 id="arrIATA"class="text-xl font-semibold">ABC</h4>
+            <p id="arrName" class="text-sm">placeholder</p>
+        </div>
+    </div>
+
+    <div class="flex flex-row p-4 border-y gap-4 items-center justify-between">
+        <h3 class="text-lg font-medium tracking-tight">LEAVING FROM</h4>
+        <div class="flex flex-col">
+            <h3 id="depTerm" class="text-lg font-light tracking-tight">Terminal </h4>
+            <h4 id="depGate"class="text-xl">Gate </h4>
+        </div>
+    </div>
+    <div class="flex flex-row p-4 border-b gap-4 items-center justify-between">
+        <h3 class="text-lg font-medium tracking-tight">ARRIVING AT</h4>
+        <div class="flex flex-col">
+            <h3 id="arrTerm" class="text-lg font-light tracking-tight">Terminal </h4>
+            <h4 id="arrGate"class="text-xl">Gate </h4>
+        </div>
+    </div>
+
+    <script>
+        let flight_number = "";
+
+        const goButton = document.getElementById("go");
+        const inputVal = document.getElementById("flightInput");
+
+        let url = `https://airlabs.co/api/v9/flight?flight_iata=${flight_number}&api_key=a0d448ba-66ba-48a0-8e50-dcd40ef4c344`;
+
+        function displayFlight(json) {
+            document.getElementById("flightNumIATA").innerText = json.response.flight_iata;
+            document.getElementById("airlineName").innerText = json.response.airline_name;
+            document.getElementById("depIATA").innerText = json.response.dep_iata;
+            document.getElementById("arrIATA").innerText = json.response.arr_iata;
+            document.getElementById("depName").innerText = json.response.dep_city;
+            document.getElementById("arrName").innerText = json.response.arr_city;
+            document.getElementById("depTerm").innerText += " " + json.response.dep_terminal;
+            document.getElementById("depGate").innerText += " " + json.response.dep_gate;
+            document.getElementById("arrTerm").innerText += " " + json.response.arr_terminal;
+            document.getElementById("arrGate").innerText += " " + json.response.arr_gate;
+        }
+        async function flightDetailsFunc() {
+            fetch(url)
+            .then((response) => response.json())
+            .then((json) => displayFlight(json))
+            .catch((error) => console.error(`Error fetching data: ${error.message}`));
+        }
+
+        goButton.addEventListener("click", function(e) {
+            flight_number = inputVal.value;
+            url = `https://airlabs.co/api/v9/flight?flight_iata=${flight_number}&api_key=a0d448ba-66ba-48a0-8e50-dcd40ef4c344`;
+            flightDetailsFunc();
+        })
+    </script>
+</body>
+</html>
