@@ -17,37 +17,35 @@
 
     <hr>
 
-    <div class="grid grid-cols-3 gap-4 p-3">
-        <div class="">
-            <h2 id="flightNumIATA" class="text-3xl font-semibold" id="flightHeading">AC545</h2>
-            <h4 id="airlineName" class="text-xl font-light">Air Canada</h4>
+    <div class="hidden" id="loadedContent">
+        <div class="grid grid-cols-3 p-3 gap-4">
+            <div class="">
+                <h2 id="flightNumIATA" class="text-3xl font-semibold" id="flightHeading">AC545</h2>
+                <h4 id="airlineName" class="text-xl font-light">Air Canada</h4>
+            </div>
+
+            <div class="uppercase border rounded p-1">
+                <h3 class="text-lg font-light tracking-tight">from</h4>
+                <h4 id="depIATA" class="text-xl font-semibold">ABC</h4>
+                <p  id="depName" class="text-sm">placeholder</p>
+            </div>
+
+            <div class="uppercase border rounded p-1">
+                <h3 class="text-lg font-light tracking-tight">to</h3>
+                <h4 id="arrIATA"class="text-xl font-semibold">ABC</h4>
+                <p id="arrName" class="text-sm">placeholder</p>
+            </div>
         </div>
 
-        <div class="uppercase border rounded p-1">
-            <h3 class="text-lg font-light tracking-tight">from</h4>
-            <h4 id="depIATA" class="text-xl font-semibold">ABC</h4>
-            <p  id="depName" class="text-sm">placeholder</p>
+        <div class="flex flex-col p-3 border-y">
+            <h3 class="text-lg font-medium tracking-tight underline">Departing</h3>
+            <h4 id="depTerm" class="text-md">Terminal</h4>
+            <h4 id="depGate"class="text-md font-light">Gate</h4>
         </div>
-
-        <div class="uppercase border rounded p-1">
-            <h3 class="text-lg font-light tracking-tight">to</h3>
-            <h4 id="arrIATA"class="text-xl font-semibold">ABC</h4>
-            <p id="arrName" class="text-sm">placeholder</p>
-        </div>
-    </div>
-
-    <div class="flex flex-row p-4 border-y gap-4 items-center justify-between">
-        <h3 class="text-lg font-medium tracking-tight">LEAVING FROM</h4>
-        <div class="flex flex-col">
-            <h3 id="depTerm" class="text-lg font-light tracking-tight">Terminal </h4>
-            <h4 id="depGate"class="text-xl">Gate </h4>
-        </div>
-    </div>
-    <div class="flex flex-row p-4 border-b gap-4 items-center justify-between">
-        <h3 class="text-lg font-medium tracking-tight">ARRIVING AT</h4>
-        <div class="flex flex-col">
-            <h3 id="arrTerm" class="text-lg font-light tracking-tight">Terminal </h4>
-            <h4 id="arrGate"class="text-xl">Gate </h4>
+        <div class="flex flex-col p-3 border-b">
+            <h3 class="text-lg font-medium underline">Arriving</h3>
+            <h4 id="arrTerm" class="text-md">Terminal</h4>
+            <h4 id="arrGate"class="text-md font-light">Gate</h4>
         </div>
     </div>
 
@@ -56,10 +54,12 @@
 
         const goButton = document.getElementById("go");
         const inputVal = document.getElementById("flightInput");
+        const contentArea = document.getElementById("loadedContent");
 
         let url = `https://airlabs.co/api/v9/flight?flight_iata=${flight_number}&api_key=a0d448ba-66ba-48a0-8e50-dcd40ef4c344`;
 
         function displayFlight(json) {
+            contentArea.classList.remove("hidden");
             document.getElementById("flightNumIATA").innerText = json.response.flight_iata;
             document.getElementById("airlineName").innerText = json.response.airline_name;
             document.getElementById("depIATA").innerText = json.response.dep_iata;
@@ -80,6 +80,7 @@
 
         goButton.addEventListener("click", function(e) {
             flight_number = inputVal.value;
+            inputVal.value = "";
             url = `https://airlabs.co/api/v9/flight?flight_iata=${flight_number}&api_key=a0d448ba-66ba-48a0-8e50-dcd40ef4c344`;
             flightDetailsFunc();
         })
